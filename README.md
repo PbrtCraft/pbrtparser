@@ -41,6 +41,8 @@ AttributeBegin
     AreaLightSource "area"  "color L" [1000 1000 1000] "integer nsamples" [128]
     Shape "sphere" "float radius" [3]
 AttributeEnd
+
+WorldEnd
 ```
 
 ### JSON Output
