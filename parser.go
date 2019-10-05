@@ -2,6 +2,7 @@ package pbrtparser
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -168,7 +169,7 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 		for {
 			rawCommand, err := sp.nextRawCommand()
 			if err != nil {
-				panic("EOF occur in block")
+				return nil, errors.New("EOF occur in block")
 			}
 			if strings.HasPrefix(rawCommand, blockName) {
 				break
@@ -191,7 +192,7 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 		} else if blockName == "Transform" {
 			return TransformCmd(attrCmd), nil
 		} else {
-			panic("Block name " + blockName + " no match")
+			return nil, errors.New("Block name " + blockName + " no match")
 		}
 	}
 	return nil, nil
@@ -208,7 +209,8 @@ func (sp *CmdsParser) ParseCmds() ([]interface{}, error) {
 
 		cmd, err := sp.rawToCommand(rawCommand)
 		if err != nil {
-			return nil, err
+			return nil,
+				fmt.Errorf("File: %s\nCommand: %s\nErr: %s", sp.filename, rawCommand, err)
 		}
 		if cmd == nil {
 			continue

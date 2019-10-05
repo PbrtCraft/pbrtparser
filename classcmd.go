@@ -77,7 +77,7 @@ func newParam(name, typ, rawVal string) (*Param, error) {
 			Val:  vals,
 		}, nil
 	default:
-		panic(typ + " param not match")
+		return nil, errors.New(typ + " param not match")
 	}
 }
 
@@ -233,7 +233,7 @@ func parseClassCmd(rawCommand string) (interface{}, error) {
 	case "MakeNamedMaterial":
 		return MakeNamedMaterialCmd(cmd), nil
 	default:
-		panic("Class name " + class + " no match")
+		return nil, errors.New("Class name " + class + " no match")
 	}
 }
 
@@ -278,7 +278,7 @@ func parseTextureCmd(rawCommand string) (interface{}, error) {
 		Class: tokens[7],
 	}
 	cmd.CmdType = "Texture"
-	cmd.Params, err = parseParamList(tokens[3:])
+	cmd.Params, err = parseParamList(tokens[9:])
 	if err != nil {
 		return nil, err
 	}

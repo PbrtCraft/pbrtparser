@@ -1,6 +1,7 @@
 package pbrtparser
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -43,7 +44,7 @@ func parseUseCmd(rawCommand string) (interface{}, error) {
 	case "ObjectInstanceCmd":
 		return ObjectInstanceCmd(cmd), nil
 	default:
-		panic("Error Use Cmd: " + class)
+		return nil, errors.New("Error Use Cmd: " + class)
 	}
 	return nil, nil
 }
