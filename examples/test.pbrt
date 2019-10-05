@@ -1,0 +1,20 @@
+LookAt 0 0 0 1 1 1 1 -1 0 
+Rotate -5 0 0 1
+Camera "perspective" "float fov" [80]
+Film "image"
+    "integer xresolution" [600] "integer yresolution" [600]
+    "string filename" "test.exr"
+
+Sampler "halton" "integer pixelsamples" [8]
+Integrator "path"
+
+WorldBegin
+
+AttributeBegin
+    Material "matte" "color Kd" [0 0 0]
+    Translate 150 0  20
+    AreaLightSource "area"  "color L" [1000 1000 1000] "integer nsamples" [128]
+    Shape "sphere" "float radius" [3]
+AttributeEnd
+
+WorldEnd
