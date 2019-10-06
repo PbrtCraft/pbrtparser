@@ -73,9 +73,9 @@ type TransformCmd blockCmd
 
 // CmdsParser parse the cmd in a file
 // Usage:
-//	sp, _ := pp.NewCmdsParser("test.pbrt")
-//	cmds, _ := sp.ParseCmds()
-//  sp.Close()
+//   sp, _ := pp.NewCmdsParser("test.pbrt")
+//   cmds, _ := sp.ParseCmds()
+//   sp.Close()
 type CmdsParser struct {
 	scanner  *bufio.Scanner
 	filename string
@@ -131,6 +131,11 @@ func (sp *CmdsParser) nextRawCommand() (string, error) {
 }
 
 func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
+	if rawCommand == "" {
+		// Empty Command
+		return nil, nil
+	}
+
 	if strings.HasPrefix(rawCommand, "LookAt") {
 		return parseLookAtCmd(rawCommand)
 	} else if strings.HasPrefix(rawCommand, "Rotate") {
@@ -171,12 +176,13 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 			if err != nil {
 				return nil, errors.New("EOF occur in block")
 			}
-			if strings.HasPrefix(rawCommand, blockName) {
+			if strings.HasPrefix(rawCommand, blockName+"End") {
 				break
 			}
 			cmd, err := sp.rawToCommand(rawCommand)
 			if err != nil {
-				return nil, err
+				return nil,
+					fmt.Errorf("File: %s\nCommand: %s\nErr: %s", sp.filename, rawCommand, err)
 			}
 			if cmd == nil {
 				continue
@@ -195,7 +201,7 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 			return nil, errors.New("Block name " + blockName + " no match")
 		}
 	}
-	return nil, nil
+	return nil, errors.New("Command no match:\n" + rawCommand)
 }
 
 // ParseCmds return the cmds in the file of CmdsParser
