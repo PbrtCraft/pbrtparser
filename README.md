@@ -1,5 +1,7 @@
 # Pbrt Parser
 
+![](https://travis-ci.org/PbrtCraft/pbrtparser.svg?branch=master)
+
 ## Example
 
 ```golang
