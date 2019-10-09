@@ -12,7 +12,7 @@ type LookAtCmd struct {
 	Vals []float64 `json:"vals"`
 }
 
-func parseLookAtCmd(rawCommand string) (interface{}, error) {
+func parseLookAtCmd(rawCommand string) (*LookAtCmd, error) {
 	parts := strings.Fields(rawCommand)
 	if len(parts) != 10 {
 		return nil, ErrClassCommandForm
@@ -27,5 +27,5 @@ func parseLookAtCmd(rawCommand string) (interface{}, error) {
 		}
 		cmd.Vals = append(cmd.Vals, val)
 	}
-	return cmd, nil
+	return &cmd, nil
 }

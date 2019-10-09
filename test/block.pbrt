@@ -1,0 +1,8 @@
+AttributeBegin
+    Material "matte" "color Kd" [0 0 0]
+    AttributeBegin
+        Translate 150 0  20
+        Shape "sphere" "float radius" [3]
+    AttributeEnd
+AttributeEnd
+

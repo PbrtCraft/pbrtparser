@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer sp.Close()
 
 	cmds, err := sp.ParseCmds()
 	if err != nil {

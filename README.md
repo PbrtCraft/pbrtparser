@@ -16,6 +16,7 @@ import (
 
 func main() {
 	sp, _ := pp.NewCmdsParser("test.pbrt")
+	defer sp.Close()
 	cmds, _ := sp.ParseCmds()
 	bs, _ := json.Marshal(cmds)
 	fmt.Println(string(bs))
@@ -159,3 +160,4 @@ WorldEnd
   }
 ]
 ```
+

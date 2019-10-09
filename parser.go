@@ -25,19 +25,19 @@ type IncludeCmd struct {
 	Cmds     []interface{} `json:"cmds"`
 }
 
-func parseIncludeCmd(rawCommand string) (IncludeCmd, error) {
+func parseIncludeCmd(rawCommand string) (*IncludeCmd, error) {
 	tokens := toTokens(rawCommand)
 	if len(tokens) != 4 {
-		return IncludeCmd{}, ErrClassCommandForm
+		return nil, ErrClassCommandForm
 	}
 
 	if tokens[1] != `"` || tokens[3] != `"` {
-		return IncludeCmd{}, ErrClassCommandForm
+		return nil, ErrClassCommandForm
 	}
 
 	inc := IncludeCmd{Filename: tokens[2]}
 	inc.CmdType = "Include"
-	return inc, nil
+	return &inc, nil
 }
 
 func (inc *IncludeCmd) resolve(dir string) error {
@@ -54,22 +54,15 @@ func (inc *IncludeCmd) resolve(dir string) error {
 	return nil
 }
 
-type blockCmd struct {
+// BlockCmd stores parameters of block command and
+//   the cmds in the block:
+//   BLOCKBegin
+//     ...
+//	 BLOCKEnd
+type BlockCmd struct {
 	Cmd
 	Cmds []interface{} `json:"cmds"`
 }
-
-// AttributeCmd stores cmds in the Attribute Block
-type AttributeCmd blockCmd
-
-// WorldCmd stores cmds in the World Block
-type WorldCmd blockCmd
-
-// ObjectCmd stores cmds in the Object Block
-type ObjectCmd blockCmd
-
-// TransformCmd stores cmds in the Transform Block
-type TransformCmd blockCmd
 
 // CmdsParser parse the cmd in a file
 // Usage:
@@ -162,7 +155,7 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 		strings.HasPrefix(rawCommand, "WorldBegin") ||
 		strings.HasPrefix(rawCommand, "ObjectBegin") ||
 		strings.HasPrefix(rawCommand, "TransformBegin") {
-		attrCmd := blockCmd{
+		attrCmd := BlockCmd{
 			Cmds: []interface{}{},
 		}
 
@@ -189,17 +182,7 @@ func (sp *CmdsParser) rawToCommand(rawCommand string) (interface{}, error) {
 			}
 			attrCmd.Cmds = append(attrCmd.Cmds, cmd)
 		}
-		if blockName == "Attribute" {
-			return AttributeCmd(attrCmd), nil
-		} else if blockName == "World" {
-			return WorldCmd(attrCmd), nil
-		} else if blockName == "Object" {
-			return ObjectCmd(attrCmd), nil
-		} else if blockName == "Transform" {
-			return TransformCmd(attrCmd), nil
-		} else {
-			return nil, errors.New("Block name " + blockName + " no match")
-		}
+		return &attrCmd, nil
 	}
 	return nil, errors.New("Command no match:\n" + rawCommand)
 }

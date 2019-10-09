@@ -112,51 +112,13 @@ func parseParamList(tokens []string) ([]*Param, error) {
 	return params, nil
 }
 
-type classCmd struct {
+// ClassCmd stores parameters of class command
+//   COMMANDTYPE "Name" "Par1.Type1 Par1.Name1" [Par1.Vals] ...
+type ClassCmd struct {
 	Cmd
 	Name   string   `json:"name"`
 	Params []*Param `json:"params"`
 }
-
-// CameraCmd stores parameters of camera command:
-//   Camera "perspective" "float fov" [39]
-type CameraCmd classCmd
-
-// MaterialCmd stores parameters of material command:
-//   Material "matte" "color Kd" [0 0 0]
-type MaterialCmd classCmd
-
-// ShapeCmd stores parameters of shape command:
-//   Shape "sphere" "float radius" [3]
-type ShapeCmd classCmd
-
-// FilmCmd stores parameters of film command:
-//   Film "image" "integer xresolution" [700] "integer yresolution" [700]
-type FilmCmd classCmd
-
-// SamplerCmd stores parameters of sampler command:
-//   Sampler "halton" "integer pixelsamples" [8]
-type SamplerCmd classCmd
-
-// IntegratorCmd stores parameters of integrator command:
-//   Integrator "path"
-type IntegratorCmd classCmd
-
-// LightSourceCmd stores parameters of integrator command:
-//   LightSource "point" "rgb I" [ .5 .5 .5 ]
-type LightSourceCmd classCmd
-
-// AreaLightSourceCmd stores parameters of integrator command:
-//   AreaLightSource "diffuse" "rgb L" [ .5 .5 .5 ]
-type AreaLightSourceCmd classCmd
-
-// MakeNamedMediumCmd stores parameters of make named medium command:
-//   MakeNamedMedium "mymedium" "string type" "homogeneous" "rgb sigma_s" [100 100 100]
-type MakeNamedMediumCmd classCmd
-
-// MakeNamedMaterialCmd store parameters of make named material command:
-//   MakeNamedMaterial "myplastic" "string type" "plastic" "float roughness" [0.1]
-type MakeNamedMaterialCmd classCmd
 
 func isClassCmd(rawCommand string) bool {
 	for _, prefix := range []string{
@@ -178,9 +140,9 @@ func isClassCmd(rawCommand string) bool {
 	return false
 }
 
-func parseClassCmd(rawCommand string) (interface{}, error) {
+func parseClassCmd(rawCommand string) (*ClassCmd, error) {
 	tokens := toTokens(rawCommand)
-	cmd := classCmd{}
+	cmd := ClassCmd{}
 
 	if len(tokens) == 0 {
 		return nil, ErrClassEmpty
@@ -211,30 +173,7 @@ func parseClassCmd(rawCommand string) (interface{}, error) {
 	}
 
 	cmd.CmdType = class
-	switch class {
-	case "Camera":
-		return CameraCmd(cmd), nil
-	case "Shape":
-		return ShapeCmd(cmd), nil
-	case "Material":
-		return MaterialCmd(cmd), nil
-	case "Film":
-		return FilmCmd(cmd), nil
-	case "Sampler":
-		return SamplerCmd(cmd), nil
-	case "Integrator":
-		return IntegratorCmd(cmd), nil
-	case "LightSource":
-		return LightSourceCmd(cmd), nil
-	case "AreaLightSource":
-		return AreaLightSourceCmd(cmd), nil
-	case "MakeNamedMedium":
-		return MakeNamedMediumCmd(cmd), nil
-	case "MakeNamedMaterial":
-		return MakeNamedMaterialCmd(cmd), nil
-	default:
-		return nil, errors.New("Class name " + class + " no match")
-	}
+	return &cmd, nil
 }
 
 // TextureCmd stores parameters of texture command:
