@@ -49,7 +49,7 @@ func newParam(name, typ, rawVal string) (*Param, error) {
 		for _, s := range strings.Fields(rawVal) {
 			i, err := strconv.Atoi(s)
 			if err != nil {
-				fmt.Errorf("pbrtparser.classmd.newParam: %s", err)
+				return nil, fmt.Errorf("pbrtparser.classmd.newParam: %s", err)
 			}
 			vals = append(vals, i)
 		}
@@ -67,7 +67,7 @@ func newParam(name, typ, rawVal string) (*Param, error) {
 		for _, s := range strings.Fields(rawVal) {
 			f, err := strconv.ParseFloat(s, 64)
 			if err != nil {
-				fmt.Errorf("pbrtparser.classmd: %s", err)
+				return nil, fmt.Errorf("pbrtparser.classmd: %s", err)
 			}
 			vals = append(vals, f)
 		}
@@ -221,5 +221,5 @@ func parseTextureCmd(rawCommand string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return cmd, nil
+	return &cmd, nil
 }

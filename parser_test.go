@@ -83,6 +83,40 @@ func TestClass(t *testing.T) {
 			Name:   "path",
 			Params: []*Param{},
 		},
+		&ClassCmd{
+			Cmd:  Cmd{"Film"},
+			Name: "image",
+			Params: []*Param{
+				&Param{
+					Name: "xr",
+					Type: "integer",
+					Val:  []int{600},
+				},
+				&Param{
+					Name: "filename",
+					Type: "string",
+					Val:  "test.exr",
+				},
+			},
+		},
+		&TextureCmd{
+			Cmd:   Cmd{"Texture"},
+			Name:  "name",
+			Type:  "type",
+			Class: "class",
+			Params: []*Param{
+				&Param{
+					Name: "f",
+					Type: "bool",
+					Val:  true,
+				},
+				&Param{
+					Name: "ok",
+					Type: "bool",
+					Val:  false,
+				},
+			},
+		},
 	}
 
 	if diff := cmp.Diff(want, got); diff != "" {

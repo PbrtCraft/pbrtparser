@@ -1,3 +1,7 @@
 Camera "perspective" "float fov" [80]
 Integrator "path"
+Film "image"
+     "integer xr" [600]
+     "string filename" "test.exr"
 
+Texture "name" "type" "class" "bool f" "true" "bool ok" "false"
