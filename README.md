@@ -1,6 +1,6 @@
 # Pbrt Parser
 
-![](https://travis-ci.org/PbrtCraft/pbrtparser.svg?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/PbrtCraft/pbrtparser)](https://goreportcard.com/report/github.com/PbrtCraft/pbrtparser) ![](https://travis-ci.org/PbrtCraft/pbrtparser.svg?branch=master)
 
 ## Example
 
